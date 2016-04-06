@@ -57,9 +57,15 @@ class Imdb
 		$arr['original_title'] = trim($this->match('/class="title-extra">(.*?)</ms', $html, 1));
 		$arr['year'] = trim($this->match('/<title>.*?\(.*?(\d{4}).*?\).*?<\/title>/ms', $html, 1));
 		$regexstring="'url'";
-		
-		//$arr['studioInner'] = 	$this->match_all('/>(.*?)</ms', $html,1);
-		$arr['studio'] = $this->match_all('/\s(.*?)\z/ms',$this->match_all('/\"name\">(.*?)</ms', $html,1),1);
+		$itemprop='"itemprop"';
+		$studNameString='"name"';
+		$studioInner2=$this->match_all('/name.>(.*?)</ms', $html,1);
+		$studioInner = 	$this->match_all('/itemprop='.$regexstring.'><span\sclass='.$itemprop.'\s'.$studNameString.'>(.*?)</ms', $html,1);
+	//	$arr['studioInner'] =$this->match_all('/itemprop=.url.><span class=.itemprop. itemprop=.name.>(.*?)</ms', $html,1);
+		$arr['studioInner2'] =$this->match_all('/name.>(.*?)</ms', $html,1);
+	//	$arr['studioInner3'] =$this->match_all('/\sitemprop='.$studNameString.'>(.*?)</ms', $html,1);
+		//$arr['studioInner4'] =$this->match_all('/>(.*?)</ms', $html,1);
+		$arr['studio'] = $this->end($studioInner2);
 		//$arr['genresInner'] = $this->match('/Genre.?:(.*?)(<\/div>|See more)/ms', $html, 1);
 		$arr['genres'] = $this->match_all('/<a.*?>(.*?)<\/a>/ms',       $this->match('/Genre.?:(.*?)(<\/div>|See more)/ms', $html, 1), 1);
 		$arr['rating'] = $this->match('/<b>(\d.\d)\/10<\/b>/ms', $html, 1);
